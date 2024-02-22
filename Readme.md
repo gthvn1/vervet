@@ -4,4 +4,4 @@
 
 Implementation of Monkey Lang in V... That's the vervet monkey.
 
-As easy as `v run .` in *src/*.
+As easy as `v run .`.
