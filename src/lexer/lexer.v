@@ -1,5 +1,7 @@
 module lexer
 
+import token
+
 struct Lexer {
 mut:
 	input         string
