@@ -3,7 +3,7 @@ module lexer
 import token
 
 struct Lexer {
-mut:
+pub mut:
 	input         string
 	position      int // current position in input (points to current char)
 	read_position int // current reading position in input (after current char)
