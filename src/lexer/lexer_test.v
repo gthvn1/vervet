@@ -1,6 +1,7 @@
 import lexer
+import token
 
-fn test_lexer() {
+fn test_read_char() {
 	stmt := 'let a = 5;'
 
 	mut l := lexer.new(stmt)
@@ -19,4 +20,13 @@ fn test_lexer() {
 	// If we read another char as we are at the end we still read 0
 	l.read_char()
 	assert l.ch == 0
+}
+
+fn test_next_token() {
+	stmt := 'let a = 5;'
+
+	mut l := lexer.new(stmt)
+
+	t := l.next_token()
+	assert t == token.Token{'type', 'literal'}
 }

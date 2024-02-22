@@ -1,5 +1,7 @@
 module lexer
 
+import token
+
 pub struct Lexer {
 pub mut:
 	input         string
@@ -24,4 +26,13 @@ pub fn (mut l Lexer) read_char() {
 
 	l.position = l.read_position
 	l.read_position += 1
+}
+
+pub fn (mut l Lexer) next_token() token.Token {
+	t := match l.ch {
+		`l` { &token.Token{'type', 'literal'} }
+		else { &token.Token{'another type', 'another_literal'} }
+	}
+
+	return *t
 }

@@ -7,7 +7,7 @@ module token
 
 type TokenType = string
 
-struct Token {
+pub struct Token {
 	typ     TokenType
 	literal string
 }
