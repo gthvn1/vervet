@@ -8,6 +8,6 @@ module token
 type TokenType = string
 
 struct Token {
-	ty      TokenType
+	typ     TokenType
 	literal string
 }
