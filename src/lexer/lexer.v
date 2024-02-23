@@ -30,9 +30,19 @@ pub fn (mut l Lexer) read_char() {
 
 pub fn (mut l Lexer) next_token() token.Token {
 	t := match l.ch {
-		`l` { &token.Token{'type', 'literal'} }
-		else { &token.Token{'another type', 'another_literal'} }
+		`=` { &token.Token{token.assign, '='} }
+		`;` { &token.Token{token.semicolon, ';'} }
+		`(` { &token.Token{token.lparen, '('} }
+		`)` { &token.Token{token.rparen, ')'} }
+		`,` { &token.Token{token.comma, ','} }
+		`+` { &token.Token{token.plus, '+'} }
+		`{` { &token.Token{token.lbrace, '{'} }
+		`}` { &token.Token{token.rbrace, '}'} }
+		`0` { &token.Token{token.eof, ''} }
+		else { &token.Token{token.illegal, ''} }
 	}
+
+	l.read_char()
 
 	return *t
 }

@@ -22,11 +22,31 @@ fn test_read_char() {
 	assert l.ch == 0
 }
 
-fn test_next_token() {
-	stmt := 'let a = 5;'
+fn test_simple_next_token() {
+	stmt := '=+(){},;'
+
+	expected := [
+		token.Token{token.assign, '='},
+		token.Token{token.plus, '+'},
+		token.Token{token.lparen, '('},
+		token.Token{token.rparen, ')'},
+		token.Token{token.lbrace, '{'},
+		token.Token{token.rbrace, '}'},
+		token.Token{token.comma, ','},
+		token.Token{token.semicolon, ';'},
+	]
 
 	mut l := lexer.new(stmt)
 
-	t := l.next_token()
-	assert t == token.Token{'type', 'literal'}
+	for i, t in expected {
+		tok := l.next_token()
+		if tok.typ != t.typ {
+			eprintln('tests[${i}] - tokentype wrong. expected=<${t.typ}> , got=<${tok.typ}>')
+			assert false
+		}
+		if tok.literal != t.literal {
+			eprintln('tests[${i}] - literal wrong. expected=<${t.literal}> , got=<${tok.literal}>')
+			assert false
+		}
+	}
 }
