@@ -51,6 +51,7 @@ fn is_digit(c u8) bool {
 fn lookup_ident(ident string) TokType {
 	return match ident {
 		'let' { TokType.let }
+		'fn' { TokType.function }
 		else { TokType.ident }
 	}
 }
@@ -101,7 +102,7 @@ pub fn (mut l Lexer) next_token() Tok {
 		`}` {
 			&Tok{TokType.rbrace, '}'}
 		}
-		`0` {
+		`\0` {
 			&Tok{TokType.eof, ''}
 		}
 		else {
