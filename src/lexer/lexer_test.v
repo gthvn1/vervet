@@ -1,6 +1,9 @@
 import lexer
 import token
 
+type Tok = token.Token
+type TokType = token.TokenType
+
 fn test_read_char() {
 	stmt := 'let a = 5;'
 
@@ -26,14 +29,40 @@ fn test_simple_next_token() {
 	stmt := '=+(){},;'
 
 	expected := [
-		token.Token{token.assign, '='},
-		token.Token{token.plus, '+'},
-		token.Token{token.lparen, '('},
-		token.Token{token.rparen, ')'},
-		token.Token{token.lbrace, '{'},
-		token.Token{token.rbrace, '}'},
-		token.Token{token.comma, ','},
-		token.Token{token.semicolon, ';'},
+		Tok{TokType.assign, '='},
+		Tok{TokType.plus, '+'},
+		Tok{TokType.lparen, '('},
+		Tok{TokType.rparen, ')'},
+		Tok{TokType.lbrace, '{'},
+		Tok{TokType.rbrace, '}'},
+		Tok{TokType.comma, ','},
+		Tok{TokType.semicolon, ';'},
+	]
+
+	mut l := lexer.new(stmt)
+
+	for i, t in expected {
+		tok := l.next_token()
+		if tok.typ != t.typ {
+			eprintln('tests[${i}] - tokentype wrong. expected=<${t.typ}> , got=<${tok.typ}>')
+			assert false
+		}
+		if tok.literal != t.literal {
+			eprintln('tests[${i}] - literal wrong. expected=<${t.literal}> , got=<${tok.literal}>')
+			assert false
+		}
+	}
+}
+
+fn test_extended_next_token() {
+	stmt := 'let five = 5;'
+
+	expected := [
+		Tok{TokType.let, 'let'},
+		Tok{TokType.ident, 'five'},
+		Tok{TokType.assign, '='},
+		Tok{TokType.integer, '5'},
+		Tok{TokType.semicolon, ';'},
 	]
 
 	mut l := lexer.new(stmt)

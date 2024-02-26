@@ -5,25 +5,45 @@ module token
 //        -> LET, IDENTIFIER("x"), EQUAL_SIGN, INTEGER(5), PLUS_SIGN,
 //           INTEGER(5), SEMICOLON
 
-type TokenType = string
+enum TokenType {
+	illegal
+	eof
+	ident
+	integer
+	assign
+	plus
+	comma
+	semicolon
+	lparen
+	rparen
+	lbrace
+	rbrace
+	function
+	let
+}
 
-pub const illegal = 'ILLEGAL'
-pub const eof = 'EOF'
-pub const ident = 'IDENT'
-pub const integer = 'INT'
-pub const assign = '='
-pub const plus = '+'
-pub const comma = ','
-pub const semicolon = ';'
-pub const lparen = '('
-pub const rparen = ')'
-pub const lbrace = '{'
-pub const rbrace = '}'
-pub const function = 'FUNCTION'
-pub const let = 'LET'
+// Convert the TokenType to a string
+pub fn (tt TokenType) to_string() string {
+	return match tt {
+		.illegal { 'ILLEGAL' }
+		.eof { 'EOF' }
+		.ident { 'IDENT' }
+		.integer { 'INT' }
+		.assign { '=' }
+		.plus { '+' }
+		.comma { ',' }
+		.semicolon { ';' }
+		.lparen { '(' }
+		.rparen { ')' }
+		.lbrace { '{' }
+		.rbrace { '}' }
+		.function { 'FUNCTION' }
+		.let { 'LET' }
+	}
+}
 
 pub struct Token {
-	pub:
+pub:
 	typ     TokenType
 	literal string
 }
