@@ -55,7 +55,16 @@ fn test_simple_next_token() {
 }
 
 fn test_extended_next_token() {
-	stmt := 'let five = 5;'
+	stmt := '
+	let five = 5;
+	let ten = 10;
+
+	let add = fn(x, y) {
+		x + y;
+	};
+
+	let result = add(five, ten);
+	'
 
 	expected := [
 		Tok{TokType.let, 'let'},
@@ -63,6 +72,38 @@ fn test_extended_next_token() {
 		Tok{TokType.assign, '='},
 		Tok{TokType.integer, '5'},
 		Tok{TokType.semicolon, ';'},
+		Tok{TokType.let, 'let'},
+		Tok{TokType.ident, 'ten'},
+		Tok{TokType.assign, '='},
+		Tok{TokType.integer, '10'},
+		Tok{TokType.semicolon, ';'},
+		Tok{TokType.let, 'let'},
+		Tok{TokType.ident, 'add'},
+		Tok{TokType.assign, '='},
+		Tok{TokType.function, 'fn'},
+		Tok{TokType.lparen, '('},
+		Tok{TokType.ident, 'x'},
+		Tok{TokType.comma, ','},
+		Tok{TokType.ident, 'y'},
+		Tok{TokType.rparen, ')'},
+		Tok{TokType.lbrace, '{'},
+		Tok{TokType.ident, 'x'},
+		Tok{TokType.plus, '+'},
+		Tok{TokType.ident, 'y'},
+		Tok{TokType.semicolon, ';'},
+		Tok{TokType.rbrace, '}'},
+		Tok{TokType.semicolon, ';'},
+		Tok{TokType.let, 'let'},
+		Tok{TokType.ident, 'result'},
+		Tok{TokType.assign, '='},
+		Tok{TokType.ident, 'add'},
+		Tok{TokType.lparen, '('},
+		Tok{TokType.ident, 'five'},
+		Tok{TokType.comma, ','},
+		Tok{TokType.ident, 'ten'},
+		Tok{TokType.rparen, ')'},
+		Tok{TokType.semicolon, ';'},
+		Tok{TokType.eof, ''},
 	]
 
 	mut l := lexer.new(stmt)
