@@ -14,7 +14,7 @@ pub mut:
 }
 
 // Return a new lexer initialized with string passed as parameter
-fn new(input string) Lexer {
+pub fn new(input string) Lexer {
 	mut l := &Lexer{input, 0, 0, 0}
 	l.read_char()
 	return *l
@@ -30,6 +30,15 @@ pub fn (mut l Lexer) read_char() {
 
 	l.position = l.read_position
 	l.read_position += 1
+}
+
+// Returns the next character to be read without modifying the lexer.
+pub fn (l Lexer) peek_char() u8 {
+	return if l.read_position >= l.input.len {
+		`\0`
+	} else {
+		l.input[l.read_position]
+	}
 }
 
 // Skip space, newline, tabs and carriage return
@@ -52,8 +61,13 @@ fn is_digit(c u8) bool {
 // Return the TokenType of the given string
 fn lookup_ident(ident string) TokType {
 	return match ident {
-		'let' { TokType.let }
-		'fn' { TokType.function }
+		'fn' { TokType.k_function }
+		'let' { TokType.k_let }
+		'true' { TokType.k_true }
+		'false' { TokType.k_false }
+		'if' { TokType.k_if }
+		'else' { TokType.k_else }
+		'return' { TokType.k_return }
 		else { TokType.ident }
 	}
 }
@@ -82,7 +96,13 @@ pub fn (mut l Lexer) next_token() Tok {
 
 	t := match l.ch {
 		`=` {
-			&Tok{TokType.assign, '='}
+			// Can be '=' or '=='
+			if l.peek_char() == `=` {
+				l.read_char()
+				&Tok{TokType.eq, '=='}
+			} else {
+				&Tok{TokType.assign, '='}
+			}
 		}
 		`;` {
 			&Tok{TokType.semicolon, ';'}
@@ -98,6 +118,30 @@ pub fn (mut l Lexer) next_token() Tok {
 		}
 		`+` {
 			&Tok{TokType.plus, '+'}
+		}
+		`-` {
+			&Tok{TokType.minus, '-'}
+		}
+		`!` {
+			// Can be '!=' or '!'
+			if l.peek_char() == `=` {
+				l.read_char()
+				&Tok{TokType.not_eq, '!='}
+			} else {
+				&Tok{TokType.bang, '!'}
+			}
+		}
+		`*` {
+			&Tok{TokType.asterix, '*'}
+		}
+		`/` {
+			&Tok{TokType.slash, '/'}
+		}
+		`<` {
+			&Tok{TokType.lt, '<'}
+		}
+		`>` {
+			&Tok{TokType.gt, '>'}
 		}
 		`{` {
 			&Tok{TokType.lbrace, '{'}

@@ -64,23 +64,32 @@ fn test_extended_next_token() {
 	};
 
 	let result = add(five, ten);
+	!-/*5;
+  5 < 10 > 5;
+  if (5 < 10) {
+  return true;
+  } else {
+  return false;
+  }
+  10 == 10;
+  10 != 9;
 	'
 
 	expected := [
-		Tok{TokType.let, 'let'},
+		Tok{TokType.k_let, 'let'},
 		Tok{TokType.ident, 'five'},
 		Tok{TokType.assign, '='},
 		Tok{TokType.integer, '5'},
 		Tok{TokType.semicolon, ';'},
-		Tok{TokType.let, 'let'},
+		Tok{TokType.k_let, 'let'},
 		Tok{TokType.ident, 'ten'},
 		Tok{TokType.assign, '='},
 		Tok{TokType.integer, '10'},
 		Tok{TokType.semicolon, ';'},
-		Tok{TokType.let, 'let'},
+		Tok{TokType.k_let, 'let'},
 		Tok{TokType.ident, 'add'},
 		Tok{TokType.assign, '='},
-		Tok{TokType.function, 'fn'},
+		Tok{TokType.k_function, 'fn'},
 		Tok{TokType.lparen, '('},
 		Tok{TokType.ident, 'x'},
 		Tok{TokType.comma, ','},
@@ -93,7 +102,7 @@ fn test_extended_next_token() {
 		Tok{TokType.semicolon, ';'},
 		Tok{TokType.rbrace, '}'},
 		Tok{TokType.semicolon, ';'},
-		Tok{TokType.let, 'let'},
+		Tok{TokType.k_let, 'let'},
 		Tok{TokType.ident, 'result'},
 		Tok{TokType.assign, '='},
 		Tok{TokType.ident, 'add'},
@@ -103,6 +112,53 @@ fn test_extended_next_token() {
 		Tok{TokType.ident, 'ten'},
 		Tok{TokType.rparen, ')'},
 		Tok{TokType.semicolon, ';'},
+		//!-/*5;
+		Tok{TokType.bang, '!'},
+		Tok{TokType.minus, '-'},
+		Tok{TokType.slash, '/'},
+		Tok{TokType.asterix, '*'},
+		Tok{TokType.integer, '5'},
+		Tok{TokType.semicolon, ';'},
+		// 5 < 10 > 5;
+		Tok{TokType.integer, '5'},
+		Tok{TokType.lt, '<'},
+		Tok{TokType.integer, '10'},
+		Tok{TokType.gt, '>'},
+		Tok{TokType.integer, '5'},
+		Tok{TokType.semicolon, ';'},
+		// if (5 < 10) {
+		Tok{TokType.k_if, 'if'},
+		Tok{TokType.lparen, '('},
+		Tok{TokType.integer, '5'},
+		Tok{TokType.lt, '<'},
+		Tok{TokType.integer, '10'},
+		Tok{TokType.rparen, ')'},
+		Tok{TokType.lbrace, '{'},
+		// return true;
+		Tok{TokType.k_return, 'return'},
+		Tok{TokType.k_true, 'true'},
+		Tok{TokType.semicolon, ';'},
+		//} else {
+		Tok{TokType.rbrace, '}'},
+		Tok{TokType.k_else, 'else'},
+		Tok{TokType.lbrace, '{'},
+		// return false;
+		Tok{TokType.k_return, 'return'},
+		Tok{TokType.k_false, 'false'},
+		Tok{TokType.semicolon, ';'},
+		//}
+		Tok{TokType.rbrace, '}'},
+		// 10 == 10;
+		Tok{TokType.integer, '10'},
+		Tok{TokType.eq, '=='},
+		Tok{TokType.integer, '10'},
+		Tok{TokType.semicolon, ';'},
+		// 10 != 9;
+		Tok{TokType.integer, '10'},
+		Tok{TokType.not_eq, '!='},
+		Tok{TokType.integer, '9'},
+		Tok{TokType.semicolon, ';'},
+		// EOF
 		Tok{TokType.eof, ''},
 	]
 
