@@ -1,3 +1,3 @@
 fn main() {
-	println('Hello sailor!')
+	println('Hello sailor!!!')
 }
