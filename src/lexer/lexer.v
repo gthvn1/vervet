@@ -13,6 +13,7 @@ pub mut:
 	ch            u8  // current char under examination
 }
 
+// Return a new lexer initialized with string passed as parameter
 fn new(input string) Lexer {
 	mut l := &Lexer{input, 0, 0, 0}
 	l.read_char()
@@ -43,6 +44,7 @@ fn is_letter(c u8) bool {
 	return (`a` <= c && c <= `z`) || (`A` <= c && c <= `Z`)
 }
 
+// Return true if c is a digit
 fn is_digit(c u8) bool {
 	return `0` <= c && c <= `9`
 }
@@ -74,6 +76,7 @@ fn (mut l Lexer) read_identifier() string {
 	return l.input[pos..l.position]
 }
 
+// Return the next token and update the lexer
 pub fn (mut l Lexer) next_token() Tok {
 	l.skip_whitespace()
 
