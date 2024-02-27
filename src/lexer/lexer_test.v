@@ -54,9 +54,8 @@ fn test_simple_next_token() {
 
 	mut l := lexer.new(stmt)
 
-	for i, tt1 in expected {
-		tt2 := l.next_token()
-		assert tokens_are_equal(tt1, tt2)
+	for i, token in expected {
+		assert tokens_are_equal(token, l.next_token())
 	}
 }
 
@@ -170,15 +169,7 @@ fn test_extended_next_token() {
 
 	mut l := lexer.new(stmt)
 
-	for i, t in expected {
-		tok := l.next_token()
-		if tok.typ != t.typ {
-			eprintln('tests[${i}] - tokentype wrong. expected=<${t.typ}> , got=<${tok.typ}>')
-			assert false
-		}
-		if tok.literal != t.literal {
-			eprintln('tests[${i}] - literal wrong. expected=<${t.literal}> , got=<${tok.literal}>')
-			assert false
-		}
+	for i, token in expected {
+		assert tokens_are_equal(token, l.next_token())
 	}
 }
