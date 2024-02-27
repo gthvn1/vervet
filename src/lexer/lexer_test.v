@@ -54,7 +54,7 @@ fn test_simple_next_token() {
 
 	mut l := lexer.new(stmt)
 
-	for i, token in expected {
+	for token in expected {
 		assert tokens_are_equal(token, l.next_token())
 	}
 }
@@ -169,7 +169,7 @@ fn test_extended_next_token() {
 
 	mut l := lexer.new(stmt)
 
-	for i, token in expected {
+	for token in expected {
 		assert tokens_are_equal(token, l.next_token())
 	}
 }
