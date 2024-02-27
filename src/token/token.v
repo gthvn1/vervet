@@ -5,7 +5,7 @@ module token
 //        -> LET, IDENTIFIER("x"), EQUAL_SIGN, INTEGER(5), PLUS_SIGN,
 //           INTEGER(5), SEMICOLON
 
-enum TokenType {
+pub enum TokenType {
 	illegal
 	eof
 	// Identifiers + literals

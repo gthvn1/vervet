@@ -2,9 +2,6 @@ module lexer
 
 import token
 
-type Tok = token.Token
-type TokType = token.TokenType
-
 pub struct Lexer {
 pub mut:
 	input         string
@@ -58,17 +55,17 @@ fn is_digit(c u8) bool {
 	return `0` <= c && c <= `9`
 }
 
-// Return the TokenType of the given string
-fn lookup_ident(ident string) TokType {
+// Return the token.TokenenType of the given string
+fn lookup_ident(ident string) token.TokenType {
 	return match ident {
-		'fn' { TokType.k_function }
-		'let' { TokType.k_let }
-		'true' { TokType.k_true }
-		'false' { TokType.k_false }
-		'if' { TokType.k_if }
-		'else' { TokType.k_else }
-		'return' { TokType.k_return }
-		else { TokType.ident }
+		'fn' { token.TokenType.k_function }
+		'let' { token.TokenType.k_let }
+		'true' { token.TokenType.k_true }
+		'false' { token.TokenType.k_false }
+		'if' { token.TokenType.k_if }
+		'else' { token.TokenType.k_else }
+		'return' { token.TokenType.k_return }
+		else { token.TokenType.ident }
 	}
 }
 
@@ -91,7 +88,7 @@ fn (mut l Lexer) read_identifier() string {
 }
 
 // Return the next token and update the lexer
-pub fn (mut l Lexer) next_token() Tok {
+pub fn (mut l Lexer) next_token() token.Token {
 	l.skip_whitespace()
 
 	t := match l.ch {
@@ -99,58 +96,58 @@ pub fn (mut l Lexer) next_token() Tok {
 			// Can be '=' or '=='
 			if l.peek_char() == `=` {
 				l.read_char()
-				&Tok{TokType.eq, '=='}
+				&token.Token{token.TokenType.eq, '=='}
 			} else {
-				&Tok{TokType.assign, '='}
+				&token.Token{token.TokenType.assign, '='}
 			}
 		}
 		`;` {
-			&Tok{TokType.semicolon, ';'}
+			&token.Token{token.TokenType.semicolon, ';'}
 		}
 		`(` {
-			&Tok{TokType.lparen, '('}
+			&token.Token{token.TokenType.lparen, '('}
 		}
 		`)` {
-			&Tok{TokType.rparen, ')'}
+			&token.Token{token.TokenType.rparen, ')'}
 		}
 		`,` {
-			&Tok{TokType.comma, ','}
+			&token.Token{token.TokenType.comma, ','}
 		}
 		`+` {
-			&Tok{TokType.plus, '+'}
+			&token.Token{token.TokenType.plus, '+'}
 		}
 		`-` {
-			&Tok{TokType.minus, '-'}
+			&token.Token{token.TokenType.minus, '-'}
 		}
 		`!` {
 			// Can be '!=' or '!'
 			if l.peek_char() == `=` {
 				l.read_char()
-				&Tok{TokType.not_eq, '!='}
+				&token.Token{token.TokenType.not_eq, '!='}
 			} else {
-				&Tok{TokType.bang, '!'}
+				&token.Token{token.TokenType.bang, '!'}
 			}
 		}
 		`*` {
-			&Tok{TokType.asterix, '*'}
+			&token.Token{token.TokenType.asterix, '*'}
 		}
 		`/` {
-			&Tok{TokType.slash, '/'}
+			&token.Token{token.TokenType.slash, '/'}
 		}
 		`<` {
-			&Tok{TokType.lt, '<'}
+			&token.Token{token.TokenType.lt, '<'}
 		}
 		`>` {
-			&Tok{TokType.gt, '>'}
+			&token.Token{token.TokenType.gt, '>'}
 		}
 		`{` {
-			&Tok{TokType.lbrace, '{'}
+			&token.Token{token.TokenType.lbrace, '{'}
 		}
 		`}` {
-			&Tok{TokType.rbrace, '}'}
+			&token.Token{token.TokenType.rbrace, '}'}
 		}
 		`\0` {
-			&Tok{TokType.eof, ''}
+			&token.Token{token.TokenType.eof, ''}
 		}
 		else {
 			// If we have a letter or an integer the next caracter will be set when
@@ -158,14 +155,14 @@ pub fn (mut l Lexer) next_token() Tok {
 			// next caracter.
 			if is_letter(l.ch) {
 				ident := l.read_identifier()
-				return Tok{lookup_ident(ident), ident}
+				return token.Token{lookup_ident(ident), ident}
 			}
 
 			if is_digit(l.ch) {
-				return Tok{TokType.integer, l.read_integer()}
+				return token.Token{token.TokenType.integer, l.read_integer()}
 			}
 
-			&Tok{TokType.illegal, ''}
+			&token.Token{token.TokenType.illegal, ''}
 		}
 	}
 

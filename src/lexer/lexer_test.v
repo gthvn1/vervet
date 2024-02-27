@@ -1,9 +1,6 @@
 import lexer
 import token
 
-type Tok = token.Token
-type TokType = token.TokenType
-
 fn test_read_char() {
 	stmt := 'let a = 5;'
 
@@ -25,32 +22,41 @@ fn test_read_char() {
 	assert l.ch == 0
 }
 
+fn tokens_are_equal(tt1 token.Token, tt2 token.Token) bool {
+	mut eq := true
+
+	if tt1.typ != tt2.typ {
+		eprintln('types are different: < ${tt1.typ} > VS < ${tt2.typ} >')
+		eq = false
+	}
+
+	if tt1.literal != tt2.literal {
+		eprintln('literals are different: < ${tt1.literal} > VS < ${tt2.literal} >')
+		eq = false
+	}
+
+	return eq
+}
+
 fn test_simple_next_token() {
 	stmt := '=+(){},;'
 
 	expected := [
-		Tok{TokType.assign, '='},
-		Tok{TokType.plus, '+'},
-		Tok{TokType.lparen, '('},
-		Tok{TokType.rparen, ')'},
-		Tok{TokType.lbrace, '{'},
-		Tok{TokType.rbrace, '}'},
-		Tok{TokType.comma, ','},
-		Tok{TokType.semicolon, ';'},
+		token.Token{token.TokenType.assign, '='},
+		token.Token{token.TokenType.plus, '+'},
+		token.Token{token.TokenType.lparen, '('},
+		token.Token{token.TokenType.rparen, ')'},
+		token.Token{token.TokenType.lbrace, '{'},
+		token.Token{token.TokenType.rbrace, '}'},
+		token.Token{token.TokenType.comma, ','},
+		token.Token{token.TokenType.semicolon, ';'},
 	]
 
 	mut l := lexer.new(stmt)
 
-	for i, t in expected {
-		tok := l.next_token()
-		if tok.typ != t.typ {
-			eprintln('tests[${i}] - tokentype wrong. expected=<${t.typ}> , got=<${tok.typ}>')
-			assert false
-		}
-		if tok.literal != t.literal {
-			eprintln('tests[${i}] - literal wrong. expected=<${t.literal}> , got=<${tok.literal}>')
-			assert false
-		}
+	for i, tt1 in expected {
+		tt2 := l.next_token()
+		assert tokens_are_equal(tt1, tt2)
 	}
 }
 
@@ -76,90 +82,90 @@ fn test_extended_next_token() {
 	'
 
 	expected := [
-		Tok{TokType.k_let, 'let'},
-		Tok{TokType.ident, 'five'},
-		Tok{TokType.assign, '='},
-		Tok{TokType.integer, '5'},
-		Tok{TokType.semicolon, ';'},
-		Tok{TokType.k_let, 'let'},
-		Tok{TokType.ident, 'ten'},
-		Tok{TokType.assign, '='},
-		Tok{TokType.integer, '10'},
-		Tok{TokType.semicolon, ';'},
-		Tok{TokType.k_let, 'let'},
-		Tok{TokType.ident, 'add'},
-		Tok{TokType.assign, '='},
-		Tok{TokType.k_function, 'fn'},
-		Tok{TokType.lparen, '('},
-		Tok{TokType.ident, 'x'},
-		Tok{TokType.comma, ','},
-		Tok{TokType.ident, 'y'},
-		Tok{TokType.rparen, ')'},
-		Tok{TokType.lbrace, '{'},
-		Tok{TokType.ident, 'x'},
-		Tok{TokType.plus, '+'},
-		Tok{TokType.ident, 'y'},
-		Tok{TokType.semicolon, ';'},
-		Tok{TokType.rbrace, '}'},
-		Tok{TokType.semicolon, ';'},
-		Tok{TokType.k_let, 'let'},
-		Tok{TokType.ident, 'result'},
-		Tok{TokType.assign, '='},
-		Tok{TokType.ident, 'add'},
-		Tok{TokType.lparen, '('},
-		Tok{TokType.ident, 'five'},
-		Tok{TokType.comma, ','},
-		Tok{TokType.ident, 'ten'},
-		Tok{TokType.rparen, ')'},
-		Tok{TokType.semicolon, ';'},
+		token.Token{token.TokenType.k_let, 'let'},
+		token.Token{token.TokenType.ident, 'five'},
+		token.Token{token.TokenType.assign, '='},
+		token.Token{token.TokenType.integer, '5'},
+		token.Token{token.TokenType.semicolon, ';'},
+		token.Token{token.TokenType.k_let, 'let'},
+		token.Token{token.TokenType.ident, 'ten'},
+		token.Token{token.TokenType.assign, '='},
+		token.Token{token.TokenType.integer, '10'},
+		token.Token{token.TokenType.semicolon, ';'},
+		token.Token{token.TokenType.k_let, 'let'},
+		token.Token{token.TokenType.ident, 'add'},
+		token.Token{token.TokenType.assign, '='},
+		token.Token{token.TokenType.k_function, 'fn'},
+		token.Token{token.TokenType.lparen, '('},
+		token.Token{token.TokenType.ident, 'x'},
+		token.Token{token.TokenType.comma, ','},
+		token.Token{token.TokenType.ident, 'y'},
+		token.Token{token.TokenType.rparen, ')'},
+		token.Token{token.TokenType.lbrace, '{'},
+		token.Token{token.TokenType.ident, 'x'},
+		token.Token{token.TokenType.plus, '+'},
+		token.Token{token.TokenType.ident, 'y'},
+		token.Token{token.TokenType.semicolon, ';'},
+		token.Token{token.TokenType.rbrace, '}'},
+		token.Token{token.TokenType.semicolon, ';'},
+		token.Token{token.TokenType.k_let, 'let'},
+		token.Token{token.TokenType.ident, 'result'},
+		token.Token{token.TokenType.assign, '='},
+		token.Token{token.TokenType.ident, 'add'},
+		token.Token{token.TokenType.lparen, '('},
+		token.Token{token.TokenType.ident, 'five'},
+		token.Token{token.TokenType.comma, ','},
+		token.Token{token.TokenType.ident, 'ten'},
+		token.Token{token.TokenType.rparen, ')'},
+		token.Token{token.TokenType.semicolon, ';'},
 		//!-/*5;
-		Tok{TokType.bang, '!'},
-		Tok{TokType.minus, '-'},
-		Tok{TokType.slash, '/'},
-		Tok{TokType.asterix, '*'},
-		Tok{TokType.integer, '5'},
-		Tok{TokType.semicolon, ';'},
+		token.Token{token.TokenType.bang, '!'},
+		token.Token{token.TokenType.minus, '-'},
+		token.Token{token.TokenType.slash, '/'},
+		token.Token{token.TokenType.asterix, '*'},
+		token.Token{token.TokenType.integer, '5'},
+		token.Token{token.TokenType.semicolon, ';'},
 		// 5 < 10 > 5;
-		Tok{TokType.integer, '5'},
-		Tok{TokType.lt, '<'},
-		Tok{TokType.integer, '10'},
-		Tok{TokType.gt, '>'},
-		Tok{TokType.integer, '5'},
-		Tok{TokType.semicolon, ';'},
+		token.Token{token.TokenType.integer, '5'},
+		token.Token{token.TokenType.lt, '<'},
+		token.Token{token.TokenType.integer, '10'},
+		token.Token{token.TokenType.gt, '>'},
+		token.Token{token.TokenType.integer, '5'},
+		token.Token{token.TokenType.semicolon, ';'},
 		// if (5 < 10) {
-		Tok{TokType.k_if, 'if'},
-		Tok{TokType.lparen, '('},
-		Tok{TokType.integer, '5'},
-		Tok{TokType.lt, '<'},
-		Tok{TokType.integer, '10'},
-		Tok{TokType.rparen, ')'},
-		Tok{TokType.lbrace, '{'},
+		token.Token{token.TokenType.k_if, 'if'},
+		token.Token{token.TokenType.lparen, '('},
+		token.Token{token.TokenType.integer, '5'},
+		token.Token{token.TokenType.lt, '<'},
+		token.Token{token.TokenType.integer, '10'},
+		token.Token{token.TokenType.rparen, ')'},
+		token.Token{token.TokenType.lbrace, '{'},
 		// return true;
-		Tok{TokType.k_return, 'return'},
-		Tok{TokType.k_true, 'true'},
-		Tok{TokType.semicolon, ';'},
+		token.Token{token.TokenType.k_return, 'return'},
+		token.Token{token.TokenType.k_true, 'true'},
+		token.Token{token.TokenType.semicolon, ';'},
 		//} else {
-		Tok{TokType.rbrace, '}'},
-		Tok{TokType.k_else, 'else'},
-		Tok{TokType.lbrace, '{'},
+		token.Token{token.TokenType.rbrace, '}'},
+		token.Token{token.TokenType.k_else, 'else'},
+		token.Token{token.TokenType.lbrace, '{'},
 		// return false;
-		Tok{TokType.k_return, 'return'},
-		Tok{TokType.k_false, 'false'},
-		Tok{TokType.semicolon, ';'},
+		token.Token{token.TokenType.k_return, 'return'},
+		token.Token{token.TokenType.k_false, 'false'},
+		token.Token{token.TokenType.semicolon, ';'},
 		//}
-		Tok{TokType.rbrace, '}'},
+		token.Token{token.TokenType.rbrace, '}'},
 		// 10 == 10;
-		Tok{TokType.integer, '10'},
-		Tok{TokType.eq, '=='},
-		Tok{TokType.integer, '10'},
-		Tok{TokType.semicolon, ';'},
+		token.Token{token.TokenType.integer, '10'},
+		token.Token{token.TokenType.eq, '=='},
+		token.Token{token.TokenType.integer, '10'},
+		token.Token{token.TokenType.semicolon, ';'},
 		// 10 != 9;
-		Tok{TokType.integer, '10'},
-		Tok{TokType.not_eq, '!='},
-		Tok{TokType.integer, '9'},
-		Tok{TokType.semicolon, ';'},
+		token.Token{token.TokenType.integer, '10'},
+		token.Token{token.TokenType.not_eq, '!='},
+		token.Token{token.TokenType.integer, '9'},
+		token.Token{token.TokenType.semicolon, ';'},
 		// EOF
-		Tok{TokType.eof, ''},
+		token.Token{token.TokenType.eof, ''},
 	]
 
 	mut l := lexer.new(stmt)
