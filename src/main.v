@@ -1,3 +1,5 @@
+import repl
+
 fn main() {
-	println('Hello sailor!!!')
+	repl.start()
 }
