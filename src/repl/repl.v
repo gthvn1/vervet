@@ -8,20 +8,17 @@ pub fn start() {
 	println('
 Welcome to Monkey Islang!!!
 This is the REPL for Monkey programming language.
-Feel free to type any expressions or "q" to quit
+Type <ctrl+D> or "q" to quit
 ')
+
 	for {
-		expr := os.input_opt('>> ') or {
-			println('Same player shoot again')
-			continue
-		}
+		expr := os.input_opt('>> ') or { break }
 
 		if expr in ['q', 'q;'] {
 			println('Bye... May your trip be as enjoyable as finding')
 			println('extra bananas at the bottom of the bag!')
 			break
 		}
-		println('you typed ${expr}')
 
 		mut l := lexer.new(expr)
 		for {
@@ -29,7 +26,7 @@ Feel free to type any expressions or "q" to quit
 			if tok.typ == token.TokenType.eof {
 				break
 			}
-			println(tok)
+			tok.print()
 		}
 	}
 }

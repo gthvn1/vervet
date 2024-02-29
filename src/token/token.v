@@ -78,3 +78,9 @@ pub:
 	typ     TokenType
 	literal string
 }
+
+pub fn (t Token) print() {
+	typ_str := t.typ.to_string()
+	lit_str := t.literal
+	println('Type: ${typ_str:-20}  Literal: ${lit_str}')
+}
